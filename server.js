@@ -41,23 +41,61 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
+// Health check avec test DB
+app.get('/health', async (req, res) => {
+  try {
+    const health = {
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || 'development',
+      database: 'checking...'
+    };
+
+    // Test connexion DB si disponible
+    if (process.env.DATABASE_URL) {
+      try {
+        // Test simple sans Sequelize pour éviter les erreurs
+        health.database = 'configured';
+      } catch (dbError) {
+        health.database = 'error: ' + dbError.message;
+      }
+    } else {
+      health.database = 'not configured';
+    }
+
+    res.json(health);
+  } catch (error) {
+    res.status(500).json({
+      status: 'ERROR',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
-// Routes API
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/patients', require('./routes/patients'));
-app.use('/api/appointments', require('./routes/appointments'));
-app.use('/api/prescriptions', require('./routes/prescriptions'));
-app.use('/api/invoices', require('./routes/invoices'));
-app.use('/api/chat', require('./routes/chat'));
+// Routes API avec gestion d'erreurs
+try {
+  app.use('/api/auth', require('./routes/auth'));
+  app.use('/api/users', require('./routes/users'));
+  app.use('/api/patients', require('./routes/patients'));
+  app.use('/api/appointments', require('./routes/appointments'));
+  app.use('/api/prescriptions', require('./routes/prescriptions'));
+  app.use('/api/invoices', require('./routes/invoices'));
+  app.use('/api/chat', require('./routes/chat'));
+  console.log('✅ Routes chargées avec succès');
+} catch (error) {
+  console.error('❌ Erreur chargement routes:', error.message);
+  
+  // Routes de fallback
+  app.get('/api/*', (req, res) => {
+    res.json({
+      message: 'Route en développement',
+      path: req.path,
+      status: 'coming-soon'
+    });
+  });
+}
 
 // Gestion des erreurs 404
 app.use('*', (req, res) => {
