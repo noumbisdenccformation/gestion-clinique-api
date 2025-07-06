@@ -1,0 +1,42 @@
+{
+  "name": "gestion-clinique-api",
+  "version": "1.0.0",
+  "description": "API Backend pour la gestion clinique médicale",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'No build step required'",
+    "test": "jest"
+  },
+  "keywords": ["clinique", "medical", "api", "nodejs", "express"],
+  "author": "Gestion Clinique Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.3",
+    "sequelize": "^6.35.2",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.4",
+    "nodemailer": "^6.9.7",
+    "pdfkit": "^0.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

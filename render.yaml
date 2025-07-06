@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: gestion-clinique-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+    autoDeploy: true
+
+databases:
+  - name: gestion-clinique-db
+    plan: free
+    databaseName: gestion_clinique
+    user: postgres
